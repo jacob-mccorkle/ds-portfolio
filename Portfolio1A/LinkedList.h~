@@ -1,0 +1,12 @@
+#ifndef LINKEDLIST_H
+#define LINKEDLIST_H
+
+template <typename T>
+class LinkedList {
+ private:
+  struct Node {
+    T value;
+    Node* next;
+
+    Node(const T& v, Node* n = nullptr)
+      : value(v), next(n) {}

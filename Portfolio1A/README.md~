@@ -1,0 +1,378 @@
+# CSC2180 Portfolio README
+
+## Overview
+
+This portfolio contains the work I have done for my CSC2180 Data Structures assignments. The main things I worked with were templates, linked lists, dynamic memory, deep copying, the Rule of Three, iterators, recursion, stacks, queues, and testing.
+
+A lot of this work was new to me because I did not have much experience with C++ before this class. Most of my learning came from writing the code, testing it, finding errors, and figuring out why something was not working.
+
+---
+
+# Portfolio 1A: Linked List
+
+For Portfolio 1A, I created a templated singly linked list. The linked list uses nodes that store a value and a pointer to the next node.
+
+The main functions I implemented were:
+
+- `pushFront`
+- `pushBack`
+- `popFront`
+- `remove`
+- `contains`
+- `size`
+- `isEmpty`
+- `print`
+
+The list keeps track of the first node using a `head` pointer. Each node points to the next node, and the last node points to `nullptr`.
+
+I also made the list a template so that it can work with different data types instead of only working with integers.
+
+For example, the same linked list can be used with:
+
+- `int`
+- `double`
+- `string`
+- custom structs
+
+## What I Learned
+
+The biggest thing I learned from the linked list was how pointers actually connect objects together.
+
+Instead of having all of the values stored next to each other like an array, each node has its own value and a pointer to the next node. This means I have to follow the pointers to move through the list.
+
+I also learned how `new` and `delete` work with dynamically allocated memory. When I create a new node, I have to make sure that node is eventually deleted so that I do not have memory leaks.
+
+---
+
+# Dynamic Memory
+
+Dynamic memory was one of the more important parts of the linked list.
+
+When I add a node, I use `new` to create it. When I remove a node, I use `delete` to free that memory.
+
+For example, when removing the first node, I have to save the old head, move `head` to the next node, and then delete the old node.
+
+This helped me understand why pointers are important when working with data structures.
+
+---
+
+# Rule of Three
+
+I also implemented the Rule of Three for the linked list.
+
+The three parts are:
+
+- Destructor
+- Copy constructor
+- Copy assignment operator
+
+The destructor deletes all of the nodes when the linked list is destroyed.
+
+The copy constructor creates a completely separate linked list from another list.
+
+The copy assignment operator replaces the contents of an existing list with a copy of another list.
+
+The important part I learned here was that copying a linked list cannot just copy the `head` pointer. If I only copied the pointer, both lists would point to the same nodes.
+
+Instead, I have to create new nodes and copy the values into them. This is called a deep copy.
+
+---
+
+# Deep Copy
+
+Deep copying was something I had to spend some time understanding.
+
+A shallow copy would have two lists pointing to the same nodes. This can cause problems because changing or deleting one list could affect the other list.
+
+With a deep copy, each list has its own nodes.
+
+I think of it as making a completely separate copy instead of just giving someone directions to the same thing.
+
+---
+
+# Iterator
+
+I also implemented an iterator for the linked list.
+
+The iterator keeps track of the current node and allows the list to be moved through one node at a time.
+
+The main iterator functions I implemented were:
+
+- `operator++`
+- `operator*`
+- `operator!=`
+- `begin()`
+- `end()`
+
+This allowed me to use the linked list with a normal loop like:
+
+    for (auto it = list.begin(); it != list.end(); ++it)
+    {
+        cout << *it << " ";
+    }
+
+It also allowed the list to work with a range-based for loop.
+
+The iterator helped me understand how C++ can make a custom data structure work more like the standard containers I have used before.
+
+---
+
+# Templates
+
+Templates were another important part of the portfolio.
+
+Instead of making a separate linked list for every data type, I used:
+
+    template <typename T>
+
+This allows the same class to work with different types.
+
+For example:
+
+    LinkedList<int>
+
+can store integers, while:
+
+    LinkedList<string>
+
+can store strings.
+
+This made more sense once I saw that `T` basically represents whatever type I decide to use when I create the object.
+
+---
+
+# Limitations of the Linked List
+
+There are still some limitations to the linked list.
+
+A linked list does not have the same direct access that an array has. If I want to find a specific position in the list, I have to start at the head and move through the nodes.
+
+The list also uses dynamically allocated memory, which means I have to be careful about deleting nodes correctly.
+
+The implementation is also a basic singly linked list. Each node only points forward, so I cannot move backward through the list without starting over.
+
+---
+
+# Portfolio 1B: Stacks and Queues
+
+For Portfolio 1B, I worked with stacks and queues.
+
+A stack follows the idea of:
+
+**Last In, First Out (LIFO)**
+
+The last item added is the first item removed.
+
+A queue follows:
+
+**First In, First Out (FIFO)**
+
+The first item added is the first item removed.
+
+These structures helped me understand that the same type of data structure can be used in different ways depending on how elements are added and removed.
+
+---
+
+# Stacks
+
+For a stack, I worked with operations such as adding and removing elements from the top.
+
+A simple way I think about a stack is a stack of plates.
+
+If I put plates on top of each other, the last plate I put down is the first plate I can take off.
+
+This makes the LIFO idea easier for me to understand.
+
+---
+
+# Queues
+
+A queue works differently because the first item added is the first item removed.
+
+I think of this like people standing in line.
+
+The person who gets in line first gets served first. New people have to go to the back of the line.
+
+This helped me understand why queues use FIFO.
+
+---
+
+# Recursion
+
+I also worked with recursion in the later labs.
+
+Recursion is when a function calls itself to solve a smaller version of the same problem.
+
+The most important parts of recursion are:
+
+1. A base case
+2. A recursive case
+
+The base case is what stops the function.
+
+The recursive case calls the function again with a smaller or simpler problem.
+
+For example, with a linked list, a recursive function can move from one node to the next by calling itself with `node->next`.
+
+---
+
+# Recursive Linked List Functions
+
+For the recursive linked list lab, I implemented several functions without using loops.
+
+The functions included:
+
+- `recursiveLength`
+- `recursiveSum`
+- `recursiveContains`
+- `recursivePrintReverse`
+- `recursiveIndexOf`
+
+The length function counts the number of nodes.
+
+The sum function adds the values in the list.
+
+The contains function checks whether a specific value is in the list.
+
+The reverse print function prints the list from the last node back to the first node.
+
+The index function finds the first position of a specific value.
+
+---
+
+# Reverse Printing
+
+The reverse printing function was one of the more interesting recursion examples.
+
+Instead of printing the current node before making the recursive call, the function first moves to the end of the list.
+
+After the recursive calls return, it prints the current node.
+
+This makes the values come out in reverse order without actually changing the linked list.
+
+---
+
+# Recursive Index
+
+The recursive index function returns the position of the first matching value.
+
+The first node has index `0`.
+
+If the value is not found, the function returns `-1`.
+
+The recursive call finds the index in the rest of the list, and then the current function adds `1` when moving back up.
+
+This helped me understand that recursion does not only work by doing something while going deeper. It can also do something when the recursive calls return.
+
+---
+
+# Testing
+
+I tested the programs by compiling and running them on the class server.
+
+For C++ programs, I used commands such as:
+
+    g++ -Wall -Wextra -std=c++17 -o main main.cpp
+
+and then ran the program with:
+
+    ./main
+
+I also used Valgrind when needed to check for memory leaks.
+
+For example:
+
+    valgrind --leak-check=full ./main
+
+Testing helped me catch problems that were not always obvious just by looking at the code.
+
+---
+
+# How I Run the Programs
+
+I worked in my datastruct_portfolio1 directory on the class server.
+
+For example:
+
+    cd ~/datastruct_portfolio1
+
+I compile the `.cpp` file with `g++` and then run the executable.
+
+I do not compile header files like `LinkedList.h` by themselves. The header gets included by the `.cpp` file that uses the class.
+
+---
+
+# Git
+
+I also used Git to keep track of my work and push my assignments to GitHub.
+
+The basic process I used was:
+
+    git status
+    git add .
+    git commit -m "Update portfolio"
+    git push
+
+`git status` lets me see what has changed.
+
+`git add .` stages the changes.
+
+`git commit` saves a version of the changes with a message.
+
+`git push` sends the changes to the remote repository.
+
+Git was something else I had to get used to because it was not something I had much experience with before this class.
+
+---
+
+# Limitations
+
+The programs I made for these assignments are meant to demonstrate the data structures and concepts from the course.
+
+They are not meant to be complete replacements for the C++ Standard Library.
+
+For example, my linked list does not have every feature that something like `std::list` has.
+
+There are also situations where the programs could be made more efficient or have additional error handling. The main goal of these assignments was understanding how the data structures work and being able to implement them myself.
+
+---
+
+# Overall Reflection
+
+The main thing I have gotten out of these assignments is a better understanding of what is actually happening behind the scenes with data structures.
+
+Before working on this material, I understood some basic C++ syntax, but pointers, dynamic memory, linked lists, recursion, and iterators were much less familiar to me.
+
+Working through the assignments helped me understand why the code works instead of just looking at the code and trying to memorize it.
+
+The linked list assignments helped me understand pointers and dynamic memory. The Rule of Three helped me understand why copying dynamically allocated objects can be different from copying normal variables. Iterators helped me understand how custom data structures can work with loops. Recursion helped me understand how a function can break a problem down into smaller versions of itself.
+
+I still have areas that I need to improve, especially when it comes to writing some of this code from scratch without looking at examples. However, I understand the overall ideas much better now than I did when I started.
+
+---
+
+# Requirements Covered
+
+The work in these portfolios covers:
+
+- C++ classes
+- Templates
+- Structs
+- Pointers
+- Dynamic memory
+- `new` and `delete`
+- Singly linked lists
+- Nodes
+- Stack data structures
+- Queue data structures
+- Iterators
+- Deep copying
+- Rule of Three
+- Destructors
+- Copy constructors
+- Copy assignment
+- Recursion
+- Recursive linked list functions
+- Testing
+- Valgrind
+- Git and GitHub
