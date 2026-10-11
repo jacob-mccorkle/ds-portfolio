@@ -1,0 +1,256 @@
+
+#ifndef BST_H
+#define BST_H
+
+#include <iostream>
+#include <queue>
+
+template <typename T>
+class BST {
+private:
+    struct Node {
+        T value;
+        Node* left;
+        Node* right;
+
+        Node(const T& v)
+            : value(v), left(nullptr), right(nullptr) {}
+    };
+
+    Node* root;
+
+    Node* insertHelper(Node* node, const T& value) {
+        if (node == nullptr) {
+            return new Node(value);
+        }
+
+        if (value < node->value) {
+            node->left = insertHelper(node->left, value);
+        } else if (node->value < value) {
+            node->right = insertHelper(node->right, value);
+        }
+
+        return node;
+    }
+
+    bool searchHelper(Node* node, const T& value) const {
+        if (node == nullptr) {
+            return false;
+        }
+
+        if (!(value < node->value) && !(node->value < value)) {
+            return true;
+        }
+
+        if (value < node->value) {
+            return searchHelper(node->left, value);
+        }
+
+        return searchHelper(node->right, value);
+    }
+
+    Node* findMin(Node* node) const {
+        while (node->left != nullptr) {
+            node = node->left;
+        }
+
+        return node;
+    }
+
+    Node* removeHelper(Node* node, const T& value) {
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        if (value < node->value) {
+            node->left = removeHelper(node->left, value);
+        } else if (node->value < value) {
+            node->right = removeHelper(node->right, value);
+        } else {
+            if (node->left == nullptr && node->right == nullptr) {
+                delete node;
+                return nullptr;
+            }
+
+            if (node->left == nullptr) {
+                Node* child = node->right;
+                delete node;
+                return child;
+            }
+
+            if (node->right == nullptr) {
+                Node* child = node->left;
+                delete node;
+                return child;
+            }
+
+            Node* successor = findMin(node->right);
+            node->value = successor->value;
+            node->right = removeHelper(node->right, successor->value);
+        }
+
+        return node;
+    }
+
+    void inorderHelper(Node* node) const {
+        if (node == nullptr) {
+            return;
+        }
+
+        inorderHelper(node->left);
+        std::cout << node->value << " ";
+        inorderHelper(node->right);
+    }
+
+    void preorderHelper(Node* node) const {
+        if (node == nullptr) {
+            return;
+        }
+
+        std::cout << node->value << " ";
+        preorderHelper(node->left);
+        preorderHelper(node->right);
+    }
+
+    void postorderHelper(Node* node) const {
+        if (node == nullptr) {
+            return;
+        }
+
+        postorderHelper(node->left);
+        postorderHelper(node->right);
+        std::cout << node->value << " ";
+    }
+
+    int heightHelper(Node* node) const {
+        if (node == nullptr) {
+            return -1;
+        }
+
+        int leftHeight = heightHelper(node->left);
+        int rightHeight = heightHelper(node->right);
+
+        return 1 + (leftHeight > rightHeight
+                        ? leftHeight
+                        : rightHeight);
+    }
+
+    int sizeHelper(Node* node) const {
+        if (node == nullptr) {
+            return 0;
+        }
+
+        return 1 + sizeHelper(node->left) + sizeHelper(node->right);
+    }
+
+    Node* copyTree(Node* node) {
+        if (node == nullptr) {
+            return nullptr;
+        }
+
+        Node* copy = new Node(node->value);
+
+        try {
+            copy->left = copyTree(node->left);
+            copy->right = copyTree(node->right);
+        } catch (...) {
+            destroyTree(copy);
+            throw;
+        }
+
+        return copy;
+    }
+
+    void destroyTree(Node* node) {
+        if (node == nullptr) {
+            return;
+        }
+
+        destroyTree(node->left);
+        destroyTree(node->right);
+        delete node;
+    }
+
+public:
+    BST() : root(nullptr) {}
+
+    BST(const BST& other) : root(copyTree(other.root)) {}
+
+    BST& operator=(const BST& other) {
+        if (this != &other) {
+            Node* newRoot = copyTree(other.root);
+            destroyTree(root);
+            root = newRoot;
+        }
+
+        return *this;
+    }
+
+    ~BST() {
+        destroyTree(root);
+    }
+
+    void insert(const T& value) {
+        root = insertHelper(root, value);
+    }
+
+    bool search(const T& value) const {
+        return searchHelper(root, value);
+    }
+
+    void remove(const T& value) {
+        root = removeHelper(root, value);
+    }
+
+    void inorder() const {
+        inorderHelper(root);
+        std::cout << '\n';
+    }
+
+    void preorder() const {
+        preorderHelper(root);
+        std::cout << '\n';
+    }
+
+    void postorder() const {
+        postorderHelper(root);
+        std::cout << '\n';
+    }
+
+    void levelorder() const {
+        if (root == nullptr) {
+            std::cout << '\n';
+            return;
+        }
+
+        std::queue<Node*> nodes;
+        nodes.push(root);
+
+        while (!nodes.empty()) {
+            Node* current = nodes.front();
+            nodes.pop();
+
+            std::cout << current->value << " ";
+
+            if (current->left != nullptr) {
+                nodes.push(current->left);
+            }
+
+            if (current->right != nullptr) {
+                nodes.push(current->right);
+            }
+        }
+
+        std::cout << '\n';
+    }
+
+    int height() const {
+        return heightHelper(root);
+    }
+
+    int size() const {
+        return sizeHelper(root);
+    }
+};
+
+#endif
