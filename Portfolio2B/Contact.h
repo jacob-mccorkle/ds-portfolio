@@ -1,39 +1,40 @@
+
 #ifndef CONTACT_H
 #define CONTACT_H
 
 #include <iostream>
 #include <string>
 
-
 struct Contact {
-  std::string firstName;
-  std::string lasttName;
-  std::string phone;
+    std::string lastName;
+    std::string firstName;
+    std::string phone;
 
+    Contact() = default;
 
-  Contact() = default;
+    Contact(const std::string& last, const std::string& first,
+            const std::string& number)
+        : lastName(last), firstName(first), phone(number) {}
 
-  Contact(const std::string& first, const std::string& last, const std::strong& number)  : firstName(first), lastName(last), phone(number) {}
+    bool operator<(const Contact& other) const {
+        if (lastName != other.lastName) {
+            return lastName < other.lastName;
+        }
 
-
-  bool operator<(const Contact& other) const {
-    if (lastName != otehr.lastName) {
-      return lastName < otehr.lastName;
+        return firstName < other.firstName;
     }
 
-    return firstName < other.firstName;
-  }
-
-  bool operator==(const Contact& other) const {
-    return firstName == other.firstName &&
-    lastName == other.lastName;
-  }
+    bool operator==(const Contact& other) const {
+        return lastName == other.lastName &&
+               firstName == other.firstName;
+    }
 };
 
-inline std::ostream& operattor<<(std::ostream& out, const Contact& contact) {
-  out << contact.firstName << " " << contact.lastName << " - " << contact.phone;
-  return out;
+inline std::ostream& operator<<(std::ostream& out,
+                                const Contact& contact) {
+    out << contact.lastName << ", " << contact.firstName
+        << " - " << contact.phone;
+    return out;
 }
 
 #endif
-  

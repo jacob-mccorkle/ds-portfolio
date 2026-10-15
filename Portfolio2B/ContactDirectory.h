@@ -1,89 +1,87 @@
+
 #ifndef CONTACT_DIRECTORY_H
 #define CONTACT_DIRECTORY_H
 
-#include <iostream>
-#include <string>
 #include "BST.h"
 #include "Contact.h"
+#include <iostream>
+#include <string>
 
 class ContactDirectory {
- private:
-  BST<Contact> contacts;
+private:
+    BST<Contact> contacts;
 
+public:
+    void add(const Contact& contact) {
+        if (contacts.search(contact)) {
+            std::cout << "\nThat contact already exists.\n";
+            return;
+        }
 
- public:
-
-  void add(const std::string& first, const std::string& last, const std::string& phone) {
-    contacts.insert(Contact(first, last, phone));
-    std::cout << "Contact added. \n";
-  }
-
-  void lookup(const std::string& last) {
-    bool found = false;
-
-    contacts.inorder([&](const Contact& contact) {
-	if (!found && contact.lastName == last) {
-	  std::cout << contact << '\n';
-	  found = true;
-	}
-      });
-
-    if (!found) {
-      std::cout << "Contact not found.\n";
-    }
-  }
-
-
-  void remove(const std::string& last) {
-    Contact target;
-    bool found = false;
-
-    contacts.inorder([&](const Contact& contact) {
-	if (!found && contactt.lastName == last) {
-	  target = contact;
-	  found = true;
-	}
-      });
-
-    if (!found) {
-      std::cout << "Contact not found.\nn";
-      return;
+        contacts.insert(contact);
+        std::cout << "\nContact added successfully!\n";
     }
 
-    contacts.remove(target);
-    std::cout << "Contact deleted.\n";
-  }
+    void list() const {
+        if (contacts.size() == 0) {
+            std::cout << "\nNo contacts in the directory.\n";
+            return;
+        }
 
-  void list() {
-    if (contacts.size() == 0) {
-      std::cout << "Directory is empty.\n";
-      return;
+        std::cout << "\nLast Name, First Name - Phone\n";
+        std::cout << "----------------------------------------\n";
+        contacts.inorder();
     }
 
-    contacts.inorder([](const Contact& contact) {
-	std::cout << contact << '\n';
-      });
-  }
+    void lookup(const std::string& lastName) const {
+        bool found = false;
 
-  void count() {
-    std::cout << "Contacts: " << contacts.size() << '\n';
-    std::cout << "Height: " << contacts.height() << '\n';
-  }
+        contacts.forEachInorder([&](const Contact& contact) {
+            if (contact.lastName == lastName) {
+                std::cout << contact << '\n';
+                found = true;
+            }
+        });
 
-  void prefix(const std::string& text) {
-    bool found = false;
-
-    contacts.inorder([&](const Contact& contact) {
-	if (contact.firstName.compare(0, text.size(), text) == 0 || contact.lastName.compare(0, text.size(), text) == 0) {
-	  std::cout << contact << '\n';
-	  found = true;
-	}
-      });
-
-    if (!found) {
-      std::cout << "No matching contacts.\n";
+        if (!found) {
+            std::cout << "No contacts found with last name: "
+                      << lastName << '\n';
+        }
     }
-  }
+
+    void prefix(const std::string& beginning) const {
+        bool found = false;
+
+        contacts.forEachInorder([&](const Contact& contact) {
+            if (contact.lastName.compare(
+                    0, beginning.size(), beginning) == 0) {
+                std::cout << contact << '\n';
+                found = true;
+            }
+        });
+
+        if (!found) {
+            std::cout << "No contacts found starting with: "
+                      << beginning << '\n';
+        }
+    }
+
+    bool remove(const Contact& contact) {
+        if (!contacts.search(contact)) {
+            return false;
+        }
+
+        contacts.remove(contact);
+        return true;
+    }
+
+    int count() const {
+        return contacts.size();
+    }
+
+    int height() const {
+        return contacts.height();
+    }
 };
 
 #endif

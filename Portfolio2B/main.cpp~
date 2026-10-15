@@ -1,0 +1,112 @@
+#include "ContactDirectory.h"
+#include <iostream>
+#include <limits>
+#include <string>
+using namespace std;
+
+
+void showMenu() {
+
+  cout << "\n";
+  cout << "========================================\n";
+  cout << "           CONTACT DIRECTORY            \n";
+  cout << "========================================\n";
+  cout << " 1. Add a Contact\n";
+  cout << " 2. Search by Last Name\n";
+  cout << " 3. View All Contacts\n";
+  cout << " 4. Search by Last Name\n";
+  cout << " 5. Directory Statistics\n";
+  cout << " 6. Exit\n";
+  cout << "========================================\n";
+  cout << " Choose an option: ";
+}
+
+int main () {
+  ContactDirectory directory;
+  int choice;
+
+  cout << "\nWelcome to the Contact Directory!\n";
+
+  while (true) {
+    showMenu();
+
+    if (!(cin >> choice)) {
+      cin.clear();
+      cin.ignore(numeric_limits<streamsize>::max(), '\n');
+      cout << "\nPlease enter a number 1-6.\n";
+      continue;
+    }
+
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    if (choice == 1) {
+      string first, last, phone;
+
+      cout << "\n---------- ADD A CONTACT ----------\n";
+            cout << "First name: ";
+            getline(cin, first);
+
+            cout << "Last name: ";
+            getline(cin, last);
+
+            cout << "Phone number: ";
+            getline(cin, phone);
+
+            if (first.empty() || last.empty() || phone.empty()) {
+                cout << "\nContact not added. All fields are required.\n";
+            } else {
+                directory.add(Contact(last, first, phone));
+                cout << "\nContact added successfully!\n";
+            }
+        }
+        else if (choice == 2) {
+            string last;
+
+            cout << "\n---------- SEARCH CONTACTS ----------\n";
+            cout << "Enter last name: ";
+            getline(cin, last);
+
+            directory.lookup(last);
+        }
+	else if (choice == 3) {
+	  cout << "\n";
+	  cout << "========================================\n";
+          cout << "              ALL CONTACTS              \n";
+          cout << "========================================\n";
+
+	  if (directory.count() == 0) {
+	    cout << "Your directory is currently empty.\n";
+	  } else {
+	    directory.list();
+	    cout << "----------------------------------------\n";
+	    cout << "Total Contacts: " << directory.count() << '\n';
+	  }
+	}
+	else if (choice == 4) {
+	  string beginning;
+
+	  cout << "\n---------- PREFIX SEARCH ----------\n";
+	  cout << "Enter the beginning of a last name: ";
+	  getline(cin, beginning);
+
+	  directory.prefix(beginning);
+	}
+	else if (choice == 5) {
+	  cout << "\n---------- DIRECTORY STATISTICS ----------\n";
+	  cout << "Total contacts: " << directory.count() << '\n';
+	  cout << "Tree height: " << directory.height() << '\n';
+	}
+	else if (choice == 6) {
+	  cout << "\nThank you for using the Contactt Directory!\n";
+	  cout << "Goodbye!\n\n";
+	  break;
+	}
+	else {
+	  cout << "\nInvalid option. Please choose 1 through 6.\n";
+	}
+    cout << "\nPress Enter to return to tthe menu...";
+    cin.get();
+  }
+
+  return 0;
+}
