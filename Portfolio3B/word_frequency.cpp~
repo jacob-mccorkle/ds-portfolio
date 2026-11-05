@@ -1,0 +1,73 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <unordered_map>
+#include <cctype>
+#include <iomanip>
+
+#include "../Portfolio3A/HashTable.h"
+#include "../Portfolio3A/MinHeap.h"
+    std::cout << "\n";
+    std::cout << "========================================\n";
+    std::cout << "          WORD FREQUENCY ANALYZER       \n";
+    std::cout << "========================================\n";
+
+    std::cout << "\nFile successfully processed!\n";
+    std::cout << "Unique words found: " << counts.size() << "\n";
+
+    bool passed = counts.size() == reference.size();
+
+    for (const auto& entry : reference) {
+        int* value = counts.find(entry.first);
+
+        if (value == nullptr || *value != entry.second) {
+            passed = false;
+        }
+    }
+
+    std::cout << "\n--- HASH TABLE VERIFICATION ---\n";
+
+    if (passed) {
+        std::cout << "HashTable cross-check: PASS\n";
+    }
+    else {
+        std::cout << "HashTable cross-check: FAIL\n";
+    }
+
+    MinHeap<WordCount> topWords;
+
+    for (const auto& entry : reference) {
+        WordCount item{entry.first, entry.second};
+        topWords.insert(item);
+    }
+
+    std::cout << "\n";
+    std::cout << "========================================\n";
+    std::cout << "          TOP 10 MOST COMMON WORDS      \n";
+    std::cout << "========================================\n";
+
+    std::cout << std::left
+              << std::setw(8) << "RANK"
+              << std::setw(25) << "WORD"
+              << "COUNT\n";
+
+    std::cout << "----------------------------------------\n";
+
+    int limit = 10;
+    int rank = 1;
+
+    while (!topWords.isEmpty() && limit > 0) {
+        WordCount item = topWords.extractMin();
+
+        std::cout << std::left
+                  << std::setw(8) << rank
+                  << std::setw(25) << item.word
+                  << item.count << "\n";
+
+        rank++;
+        limit--;
+    }
+
+    std::cout << "========================================\n";
+
+    return 0;

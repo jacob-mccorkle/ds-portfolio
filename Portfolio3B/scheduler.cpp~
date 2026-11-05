@@ -1,0 +1,123 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <queue>
+#include <vector>
+
+#include "../Portfolio3A/MinHeap.h"
+#include "Task.h"
+
+struct TaskCompare {
+    bool operator()(const Task& a, const Task& b) const {
+        return b < a;
+    }
+};
+
+bool sameTask(const Task& a, const Task& b) {
+    return a.name == b.name && a.priority == b.priority;
+}
+
+int main() {
+    MinHeap<Task> tasks;
+
+    std::priority_queue<Task, std::vector<Task>, TaskCompare> reference;
+
+    std::string line;
+    std::string command;
+
+    std::cout << "Priority Task Scheduler\n";
+    std::cout << "Commands: ADD, NEXT, LIST, EXIT\n";
+
+    while (true) {
+        std::cout << "\n> ";
+        std::getline(std::cin, line);
+
+        std::istringstream input(line);
+        input >> command;
+
+        if (command == "ADD") {
+            std::string name;
+            int priority;
+
+            if (!(input >> name >> priority)) {
+                std::cout << "Usage: ADD name priority\n";
+                continue;
+            }
+
+            Task task{name, priority};
+
+            tasks.insert(task);
+            reference.push(task);
+
+            std::cout << "Added " << name
+                      << " with priority " << priority << "\n";
+        }
+        else if (command == "NEXT") {
+            if (tasks.isEmpty()) {
+                std::cout << "No tasks available.\n";
+                continue;
+            }
+
+            Task myTask = tasks.extractMin();
+
+            Task referenceTask = reference.top();
+            reference.pop();
+
+            std::cout << "Next task: " << myTask.name
+                      << " (Priority " << myTask.priority << ")\n";
+
+            if (sameTask(myTask, referenceTask)) {
+                std::cout << "Cross-check: PASS\n";
+            }
+            else {
+                std::cout << "Cross-check: FAIL\n";
+            }
+        }
+        else if (command == "LIST") {
+            if (tasks.isEmpty()) {
+                std::cout << "No tasks available.\n";
+                continue;
+            }
+
+            MinHeap<Task> heapCopy = tasks;
+            auto referenceCopy = reference;
+
+            bool passed = true;
+
+            std::cout << "Tasks in priority order:\n";
+
+            while (!heapCopy.isEmpty() && !referenceCopy.empty()) {
+                Task myTask = heapCopy.extractMin();
+
+                Task referenceTask = referenceCopy.top();
+                referenceCopy.pop();
+
+                std::cout << myTask.name
+                          << " (Priority " << myTask.priority << ")\n";
+
+                if (!sameTask(myTask, referenceTask)) {
+                    passed = false;
+                }
+            }
+
+            if (!heapCopy.isEmpty() || !referenceCopy.empty()) {
+                passed = false;
+            }
+
+            if (passed) {
+                std::cout << "Cross-check: PASS\n";
+            }
+            else {
+                std::cout << "Cross-check: FAIL\n";
+            }
+        }
+        else if (command == "EXIT") {
+            break;
+        }
+        else {
+            std::cout << "Unknown command.\n";
+        }
+    }
+
+    return 0;
+}
